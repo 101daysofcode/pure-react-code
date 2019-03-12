@@ -11,8 +11,8 @@ var testTweet = {
         handle: "catperson",
         name: "IAMA Cat Person"
     },
-    likes: 2,
-    retweets: 0,
+    likes: 14,
+    retweets: 8,
     timestamp: "2016-09-01 21:24:38"
 };
 
@@ -51,6 +51,10 @@ function Message({text}){
         {text}
     </div>);
 }
+Message.propTypes = {
+    text: PropTypes.string
+}
+
 function NameWithHandle({author}){
     const {name, handle} = author;
     return (
@@ -59,27 +63,43 @@ function NameWithHandle({author}){
             <span className="handle"> @{handle}</span>
         </span>);
 }
+Message.propTypes = {
+    author: PropTypes.string
+}
 
 const Time = ({time}) =>
     <span className="time">{moment(time).fromNow()}</span>
+
+Time.propTypes = {
+    time: PropTypes.string.isRequired
+}
     
 const ReplyButton = () =>
     <i className="fa fa-reply reply-button"/>
 
-const RetweetButton = () =>
-    <i className="fa fa-retweet retweet-button"/>
+const RetweetButton = ({count}) =>(
+    <span className="retweet-button">
+        <i className="fa fa-retweet ">
+            {count > 0 && <i className="retweet-count"/>}{count}
+        </i>
+    </span>    
+);
+RetweetButton.propTypes = {
+    count: PropTypes.number
+};
+    
 
 const LikeButton = ({count}) => (
     <span className="like-button">
-        <i className="fa fa-heart "/>
-        {count > 0 && 
-            <span className="fa fa-heart like-count">
-                {count}
+        <i className="fa fa-heart ">
+            {count > 0 && 
+            <span className="fa like-count">{count}
             </span>}
+        </i>
     </span>
     );
 LikeButton.propTypes ={
-    likes: PropTypes.number
+    count: PropTypes.number
 };
     
 
@@ -95,8 +115,8 @@ function Tweet({tweet}){
             <Message text={tweet.message}/>
                 <div className="buttons">
                     <ReplyButton/>
-                    <RetweetButton/>
-                    <LikeButton count="12"/>
+                    <RetweetButton count={tweet.retweets}/>
+                    <LikeButton count={tweet.likes}/>
                     <MoreOptionsButton/>
                 </div>                
         </div>
